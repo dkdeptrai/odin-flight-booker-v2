@@ -1,0 +1,7 @@
+<h1>Booking information</h1>
+<h3>Flight Details: <%= @flight.details %></h3>
+<% @passengers.each_with_index do |passenger, index| %>
+	<h4>Passenger <%= index %>:</h4>
+	<p>Name: <%= passenger.name %></p>
+	<p>Email: <%= passenger.email %></p>
+<% end %>

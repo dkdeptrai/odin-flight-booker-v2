@@ -1,0 +1,23 @@
+<%= form_with url: flights_path, method: :get do |f| %>
+	<%= f.label :departure_airport, "Departure Airport" %>
+	<%= f.select :departure_airport, options_from_collection_for_select(Airport.all, :id, :code) %>
+	<%= f.label :arrival_airport, "Arrival Airport" %>
+	<%= f.select :arrival_airport, options_from_collection_for_select(Airport.all, :id, :code) %>
+	<%= f.label :departure_date, "Departure Date" %>
+	<%= f.date_field :departure_date, value: Date.today, :start_year => Date.today.year, :end_year => Date.today.year + 1 %>
+	<%= f.label :number_of_passengers, "Number of Passengers" %>
+	<%= f.select :number_of_passengers, options_for_select((1..10).to_a) %>
+	<%= f.submit "Search Flights" %>
+<% end %>
+<% if @flights %>
+	<%= form_with url: new_booking_path, method: :get do |f| %>
+		<%= f.hidden_field :number_of_passengers, :value => params[:number_of_passengers] %>
+		<% @flights.each do |flight| %>
+			<p> <%= radio_button_tag 'flight_id', flight.id %><%= flight.departure_airport.code %>
+				to <%= flight.arrival_airport.code %> on <%= flight.departure_time %></p>
+		<% end %>
+		<%= f.submit 'Book Flight' %>
+	<% end %>
+<% else %>
+	<p>No flights found</p>
+<% end %>

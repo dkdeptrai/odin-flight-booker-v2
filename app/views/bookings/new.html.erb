@@ -1,0 +1,26 @@
+<h3>Complete your Booking</h3>
+<%= @flight.details %>
+<h4>Passengers Details</h4>
+<%= form_with model: @booking, local: true do |f| %>
+	<%= f.hidden_field :flight_id, value: @flight.id %>
+	<div class="passenger-form-container">
+		<%= f.fields_for :passenger_bookings do |passenger_booking| %>
+			<%= passenger_booking.hidden_field :id, value: nil %>
+			<%= passenger_booking.fields_for :passenger_attributes do |passenger_form| %>
+				<div class="passenger-form-fields">
+					<h3>Passenger <%= passenger_booking.index + 1 %></h3>
+					<div class="input-container">
+						<%= passenger_form.text_field :name, placeholder: 'Passenger Name', required: true %>
+					</div>
+					<div class="input-container">
+						<%= passenger_form.email_field :email, placeholder: 'Passenger Email', required: true %>
+					</div>
+				</div>
+			<% end %>
+		<% end %>
+		<div class="confirmation_button">
+			<%= link_to 'Cancel', root_path %>
+			<%= f.submit 'Book Flight' %>
+		</div>
+	</div>
+<% end %>
