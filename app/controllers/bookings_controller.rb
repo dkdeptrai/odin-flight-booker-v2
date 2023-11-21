@@ -14,6 +14,7 @@ class BookingsController < ApplicationController
 		@flight = Flight.find(booking_params[:flight_id])
 		if @booking.save
 			flash[:success] = 'Booking successfully created'
+			puts "Booking : #{@booking}"
 			redirect_to booking_path(@booking)
 		else
 			flash[:error] = "Something went wrong"
@@ -31,7 +32,6 @@ class BookingsController < ApplicationController
 	private
 
 	def booking_params
-		params.require(:booking).permit(:flight_id, passenger_bookings_attributes: [:id, passenger_attributes: [:name, :email]])
+		params.require(:booking).permit(:flight_id, passenger_bookings_attributes: [:id, :_destroy, passenger_attributes: [:name, :email]])
 	end
-
 end

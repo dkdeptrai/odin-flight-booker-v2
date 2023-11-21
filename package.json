@@ -1,0 +1,8 @@
+{
+  "name": "odin-flight-booker-v2",
+  "version": "1.0.0",
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "stimulus-rails-nested-form": "^4.1.0"
+  }
+}

@@ -1,26 +1,47 @@
 <h3>Complete your Booking</h3>
 <%= @flight.details %>
-<h4>Passengers Details</h4>
-<%= form_with model: @booking, local: true do |f| %>
-	<%= f.hidden_field :flight_id, value: @flight.id %>
-	<div class="passenger-form-container">
-		<%= f.fields_for :passenger_bookings do |passenger_booking| %>
-			<%= passenger_booking.hidden_field :id, value: nil %>
-			<%= passenger_booking.fields_for :passenger_attributes do |passenger_form| %>
-				<div class="passenger-form-fields">
-					<h3>Passenger <%= passenger_booking.index + 1 %></h3>
-					<div class="input-container">
-						<%= passenger_form.text_field :name, placeholder: 'Passenger Name', required: true %>
-					</div>
-					<div class="input-container">
-						<%= passenger_form.email_field :email, placeholder: 'Passenger Email', required: true %>
-					</div>
+<h4>Passenger Details</h4>
+<div data-controller="passenger">
+	<%= form_with model: @booking, local: true do |f| %>
+		<%= f.hidden_field :flight_id, value: @flight.id %>
+		<div data-passenger-target="fields">
+			<%= f.fields_for :passenger_bookings do |passenger_booking| %>
+				<div class="nested-fields" data-new-record="<%= passenger_booking.object.new_record? %>">
+					<%= passenger_booking.hidden_field :_destroy %>
+					<%= passenger_booking.fields_for :passenger_attributes do |passenger_form| %>
+						<h3>Passenger <%= passenger_booking.index + 1 %></h3>
+						<div class="input-container">
+							<%= passenger_form.text_field :name, placeholder: 'Passenger Name', required: true %>
+						</div>
+						<div class="input-container">
+							<%= passenger_form.email_field :email, placeholder: 'Passenger Email', required: true %>
+						</div>
+						<button data-action="click->passenger#remove">Remove Passenger</button>
+					<% end %>
 				</div>
 			<% end %>
-		<% end %>
+		</div>
+		<template data-passenger-target="template">
+			<div class="nested-fields" data-new-record="true">
+				<%= f.fields_for :passenger_bookings, PassengerBooking.new, child_index: 'NEW_RECORD' do |passenger_booking| %>
+					<%= passenger_booking.hidden_field :_destroy %>
+					<%= passenger_booking.fields_for :passenger_attributes, Passenger.new do |passenger_form| %>
+						<h3>Passenger NEW_RECORD</h3>
+						<div class="input-container">
+							<%= passenger_form.text_field :name, placeholder: 'Passenger Name', required: true %>
+						</div>
+						<div class="input-container">
+							<%= passenger_form.email_field :email, placeholder: 'Passenger Email', required: true %>
+						</div>
+						<button type="button" data-action="click->passenger#remove">Remove Passenger</button>
+					<% end %>
+				<% end %>
+			</div>
+		</template>
 		<div class="confirmation_button">
 			<%= link_to 'Cancel', root_path %>
 			<%= f.submit 'Book Flight' %>
 		</div>
-	</div>
-<% end %>
+	<% end %>
+	<button data-action="click->passenger#add">Add Passenger</button>
+</div>
